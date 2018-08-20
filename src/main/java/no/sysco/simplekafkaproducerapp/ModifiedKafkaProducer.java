@@ -24,7 +24,7 @@ import org.apache.kafka.common.errors.TopicExistsException;
  * @param <K>
  * @param <V>
  */
-public class ModifiedKafkaProducer<K, V> extends KafkaProducer<String, Object> {
+public class ModifiedKafkaProducer<K, V> extends KafkaProducer<K, V> {
 
     private static final String TOPIC_NAME = "__clients";
     private String clientId;
@@ -58,7 +58,7 @@ public class ModifiedKafkaProducer<K, V> extends KafkaProducer<String, Object> {
             });
             config.values().forEach((key, value) -> {
                 //System.out.println(String.format("\tkey: %-50s \t\t value: %s", key, value));
-                this.send(new ProducerRecord<>(TOPIC_NAME, this.clientId, key + ":" + value));
+                this.send(new ProducerRecord<>(TOPIC_NAME, (K)this.clientId, (V)(key + ":" + value)));
             });
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(ModifiedKafkaProducer.class.getName()).log(Level.SEVERE, null, ex);

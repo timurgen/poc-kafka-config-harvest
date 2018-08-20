@@ -3,6 +3,7 @@ package no.sysco.simplekafkaproducerapp;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -24,8 +25,8 @@ public class Main {
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-        try (Producer<String, Object> producer = new ModifiedKafkaProducer<>(props)) {
-
+        try (Producer<String, Object> producer = new KafkaProducer<>(props)) {
+            KafkaConfigHarverster.harvest(producer);
             while (true) {
                 Future<RecordMetadata> metadata = producer.send(new ProducerRecord<>("infosak-case-created-v1", "case-0000004222" + System.currentTimeMillis(), "{\n"
                         + "  \"status\": \"IN_PROGRESS\",\n"
