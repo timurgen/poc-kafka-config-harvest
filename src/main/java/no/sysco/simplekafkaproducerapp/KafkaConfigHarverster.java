@@ -1,5 +1,7 @@
 package no.sysco.simplekafkaproducerapp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.lang.reflect.Field;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -15,6 +17,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
  */
 public class KafkaConfigHarverster {
     private static final String TOPIC_NAME = "__clients";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static final void harvest(Producer producer) {
 
@@ -31,13 +34,12 @@ public class KafkaConfigHarverster {
             });
             String clientId = "GENERATED_CLIENT_ID";
             
-            config.values().forEach((key, value) -> {
-                System.out.println(String.format("\tkey: %-50s \t\t value: %s", key, value));
-                producer.send(new ProducerRecord<>(TOPIC_NAME, clientId, key + ":" + value));
-            });
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            String jsonizedConf = MAPPER.writeValueAsString(config.values());
+            producer.send(new ProducerRecord<>(TOPIC_NAME, clientId, jsonizedConf));
+
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | JsonProcessingException ex) {
             Logger.getLogger(ModifiedKafkaProducer.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex.getMessage(), ex);
-        }
+        } 
     }
 }
