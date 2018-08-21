@@ -35,6 +35,48 @@
             <type>jar</type>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <!-- Change to true if you need to fail build if spotbugs finds any violations. -->
+                    <failOnError>false</failOnError>
+                    <effort>max</effort>
+                    <threshold>max</threshold>
+                    <!--
+                    Spotbugs has a number of plugins which extend its functionality.
+                    Most known plugins are fb-contrib and findsecbugs (for web applicaitons).
+                    You may add them here, if you use findbugs instead of spotbugs, remove .sb from plugin version
+                    -->
+                    <plugins>
+                        <plugin>
+                            <groupId>com.mebigfatguy.fb-contrib</groupId>
+                            <artifactId>fb-contrib</artifactId>
+                            <version>7.4.3.sb</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>LATEST</version> <!-- Auto-update to the latest stable -->
+                        </plugin>
+                    </plugins>
+                </configuration>     
+                <executions>
+                    <!-- Ensures that FindBugs inspects source code when project is compiled. -->
+                    <execution>
+                        <id>analyze-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>

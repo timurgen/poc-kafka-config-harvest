@@ -14,7 +14,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
  */
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException, NoSuchFieldException, IllegalAccessException {
         Properties props = new Properties();
         props.put("bootstrap.servers", "127.0.0.1:9092");
         props.put("acks", "all");
