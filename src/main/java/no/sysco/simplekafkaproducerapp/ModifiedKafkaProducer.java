@@ -19,7 +19,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.TopicExistsException;
 
 /**
- *
+ * @deprecated use {@code ConfigHarvesterInterceptor}
  * @author 100tsa
  * @param <K>
  * @param <V>
@@ -35,9 +35,9 @@ public class ModifiedKafkaProducer<K, V> extends KafkaProducer<K, V> {
 
     public ModifiedKafkaProducer(Properties properties) {
         super(properties);
-        if(null == properties.getProperty("client.id")){
+        if (null == properties.getProperty("client.id")) {
             this.clientId = "GENERATED_CLIENT_ID";
-        }else {
+        } else {
             this.clientId = properties.getProperty("client.id");
         }
         createTopic(TOPIC_NAME, 1, (short) 1, properties);
@@ -58,7 +58,7 @@ public class ModifiedKafkaProducer<K, V> extends KafkaProducer<K, V> {
             });
             config.values().forEach((key, value) -> {
                 //System.out.println(String.format("\tkey: %-50s \t\t value: %s", key, value));
-                this.send(new ProducerRecord<>(TOPIC_NAME, (K)this.clientId, (V)(key + ":" + value)));
+                this.send(new ProducerRecord<>(TOPIC_NAME, (K) this.clientId, (V) (key + ":" + value)));
             });
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(ModifiedKafkaProducer.class.getName()).log(Level.SEVERE, null, ex);
